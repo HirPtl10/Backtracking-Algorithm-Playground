@@ -2,7 +2,7 @@
 
 **DAA course project** · Hirang Patel · Enrollment No. **12402080601047**
 
-An interactive React, TypeScript, and Vite app for exploring N-Queens, Sudoku, graph coloring, and maze solving through real step-by-step backtracking events.
+An interactive React, TypeScript, and Vite DAA project for exploring N-Queens, Sudoku, graph coloring, and maze solving through real step-by-step backtracking events. Each readable solver is in its own file under `src/algorithms/`.
 
 ## Run
 
