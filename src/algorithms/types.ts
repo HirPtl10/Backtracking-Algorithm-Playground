@@ -1,4 +1,3 @@
-/** Events emitted by the algorithm generators and consumed by the visualizer. */
 export type EventType =
   | 'CHECK'
   | 'PLACE'

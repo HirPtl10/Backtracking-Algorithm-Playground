@@ -1,3 +1,1 @@
-// This valid sample is intentionally chosen to reach a few dead ends so the
-// animated solver visibly demonstrates undoing a guess before it succeeds.
 export const sampleSudoku = [[1,0,0,0,5,0,0,0,9],[0,0,6,7,8,0,0,2,0],[7,8,0,0,2,0,4,0,0],[0,0,0,0,6,7,0,0,0],[0,6,0,0,0,0,0,0,4],[8,0,0,2,0,0,5,6,0],[3,0,5,6,0,8,0,1,0],[6,7,8,0,0,2,0,0,0],[0,0,0,0,0,0,0,0,0]];

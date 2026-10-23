@@ -1,14 +1,9 @@
 import type { AlgoEvent } from './types';
 
-/**
- * Place one queen in each row. A row is a recursion level, and each column is
- * a candidate choice at that level.
- */
 export function* solveQueens(
   boardSize: number,
   findAllSolutions: boolean,
 ): Generator<AlgoEvent> {
-  // queens[row] stores the column occupied by that row. -1 means empty.
   const queens = Array<number>(boardSize).fill(-1);
   let solutionsFound = 0;
 
@@ -25,7 +20,6 @@ export function* solveQueens(
   }
 
   function* search(row: number): Generator<AlgoEvent, boolean, unknown> {
-    // Base case: all rows have a queen, so this is a complete solution.
     if (row === boardSize) {
       solutionsFound += 1;
       yield {
@@ -35,7 +29,6 @@ export function* solveQueens(
         board: [...queens],
       };
 
-      // Returning true stops the search when only the first solution is wanted.
       return !findAllSolutions;
     }
 
@@ -59,7 +52,6 @@ export function* solveQueens(
         continue;
       }
 
-      // Choose: place a queen, then search the next row.
       queens[row] = column;
       yield {
         type: 'PLACE',
@@ -80,7 +72,6 @@ export function* solveQueens(
       const stopAfterSolution = yield* search(row + 1);
       if (stopAfterSolution) return true;
 
-      // Undo: the deeper rows had no solution with this placement.
       queens[row] = -1;
       yield {
         type: 'BACKTRACK',
@@ -92,7 +83,6 @@ export function* solveQueens(
       };
     }
 
-    // Every column was tried and none led to a solution.
     return false;
   }
 

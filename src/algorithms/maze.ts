@@ -1,19 +1,17 @@
 import type { AlgoEvent } from './types';
 
 const DIRECTIONS: Array<[number, number]> = [
-  [0, 1],  // right
-  [1, 0],  // down
-  [0, -1], // left
-  [-1, 0], // up
+  [0, 1],
+  [1, 0],
+  [0, -1],
+  [-1, 0],
 ];
 
-/** Create a deterministic perfect maze using randomized depth-first carving. */
 export function createSampleMaze(): number[][] {
   const rows = 11;
   const columns = 15;
   const maze = Array.from({ length: rows }, () => Array(columns).fill(1));
 
-  // A small seeded generator makes the sample repeatable on every reset.
   let seed = 86;
   const randomIndex = (limit: number): number => {
     seed = (seed * 16807) % 2147483647;
@@ -24,7 +22,6 @@ export function createSampleMaze(): number[][] {
   const stack: Array<[number, number]> = [[1, 1]];
   maze[1][1] = 0;
 
-  // Carve between odd-numbered cells, using the stack as a DFS recursion stack.
   while (stack.length > 0) {
     const [row, column] = stack[stack.length - 1];
     const possibleNeighbors: Array<[number, number]> = [
@@ -54,7 +51,6 @@ export function createSampleMaze(): number[][] {
     stack.push([nextRow, nextColumn]);
   }
 
-  // Open the entrance and exit at opposite corners.
   maze[0][0] = 0;
   maze[0][1] = 0;
   maze[10][13] = 0;
@@ -62,7 +58,6 @@ export function createSampleMaze(): number[][] {
   return maze;
 }
 
-/** Find a path from the top-left entrance to the bottom-right exit. */
 export function* solveMaze(maze: number[][]): Generator<AlgoEvent> {
   const rows = maze.length;
   const columns = maze[0]?.length ?? 0;
@@ -74,7 +69,6 @@ export function* solveMaze(maze: number[][]): Generator<AlgoEvent> {
     const key = `${row},${column}`;
     const outsideGrid = row < 0 || column < 0 || row >= rows || column >= columns;
 
-    // A wall, a previously seen cell, or a cell outside the grid is a dead end.
     if (outsideGrid || maze[row][column] === 1 || visited.has(key)) return false;
 
     visited.add(key);
@@ -88,7 +82,6 @@ export function* solveMaze(maze: number[][]): Generator<AlgoEvent> {
       board: [...path],
     };
 
-    // Base case: the exit has been reached.
     if (row === rows - 1 && column === columns - 1) {
       solutionFound = true;
       yield {
@@ -116,7 +109,6 @@ export function* solveMaze(maze: number[][]): Generator<AlgoEvent> {
       if (yield* search(nextRow, nextColumn, depth + 1)) return true;
     }
 
-    // Undo: all four directions failed, so remove this cell from the route.
     path.delete(key);
     yield {
       type: 'BACKTRACK',

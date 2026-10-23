@@ -3,7 +3,6 @@ import type { AlgoEvent } from './types';
 const SIZE = 9;
 const BOX_SIZE = 3;
 
-/** Solve a Sudoku grid in place on a private copy, yielding each search step. */
 export function* solveSudoku(puzzle: number[][]): Generator<AlgoEvent> {
   const board = puzzle.map((row) => [...row]);
   let solutionFound = false;
@@ -38,7 +37,6 @@ export function* solveSudoku(puzzle: number[][]): Generator<AlgoEvent> {
     return candidates;
   }
 
-  // Reject contradictory clues before starting recursive search.
   for (let row = 0; row < SIZE; row += 1) {
     for (let column = 0; column < SIZE; column += 1) {
       const clue = board[row][column];
@@ -61,7 +59,6 @@ export function* solveSudoku(puzzle: number[][]): Generator<AlgoEvent> {
   }
 
   function* search(depth: number): Generator<AlgoEvent, boolean, unknown> {
-    // MRV heuristic: branch on the empty cell with the fewest legal values.
     let selectedRow = -1;
     let selectedColumn = -1;
     let smallestCandidateCount = SIZE + 1;
@@ -79,7 +76,6 @@ export function* solveSudoku(puzzle: number[][]): Generator<AlgoEvent> {
       }
     }
 
-    // Base case: there are no empty cells left.
     if (selectedRow === -1) {
       solutionFound = true;
       yield {
@@ -91,7 +87,6 @@ export function* solveSudoku(puzzle: number[][]): Generator<AlgoEvent> {
       return true;
     }
 
-    // Dead end: the selected cell has no legal value.
     if (smallestCandidateCount === 0) return false;
 
     for (let value = 1; value <= SIZE; value += 1) {
@@ -116,7 +111,6 @@ export function* solveSudoku(puzzle: number[][]): Generator<AlgoEvent> {
         continue;
       }
 
-      // Choose: put a valid digit in the cell and solve the remaining grid.
       board[selectedRow][selectedColumn] = value;
       yield {
         type: 'PLACE',
@@ -137,7 +131,6 @@ export function* solveSudoku(puzzle: number[][]): Generator<AlgoEvent> {
 
       if (yield* search(depth + 1)) return true;
 
-      // Undo: this value prevents a solution deeper in the search tree.
       board[selectedRow][selectedColumn] = 0;
       yield {
         type: 'BACKTRACK',

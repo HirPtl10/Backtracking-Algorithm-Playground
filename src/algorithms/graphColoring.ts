@@ -1,6 +1,5 @@
 import type { AlgoEvent } from './types';
 
-/** Edges in the example graph, represented as zero-based vertex pairs. */
 export const GRAPH_EDGES: Array<[number, number]> = [
   [0, 1],
   [0, 3],
@@ -11,12 +10,10 @@ export const GRAPH_EDGES: Array<[number, number]> = [
   [3, 4],
 ];
 
-/** Assign one of `colorCount` colors to every vertex without conflicts. */
 export function* colorGraph(
   vertexCount: number,
   colorCount: number,
 ): Generator<AlgoEvent> {
-  // colors[vertex] stores its assigned color; -1 means not colored yet.
   const colors = Array<number>(vertexCount).fill(-1);
   let solutionsFound = 0;
 
@@ -28,7 +25,6 @@ export function* colorGraph(
   }
 
   function* search(vertex: number): Generator<AlgoEvent, boolean, unknown> {
-    // Base case: every vertex has a valid color.
     if (vertex === vertexCount) {
       solutionsFound += 1;
       yield {
@@ -60,7 +56,6 @@ export function* colorGraph(
         continue;
       }
 
-      // Choose: color this vertex and continue with the next one.
       colors[vertex] = color;
       yield {
         type: 'PLACE',
@@ -74,7 +69,6 @@ export function* colorGraph(
 
       if (yield* search(vertex + 1)) return true;
 
-      // Undo: later vertices could not be colored with this assignment.
       colors[vertex] = -1;
       yield {
         type: 'BACKTRACK',
